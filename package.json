@@ -1,0 +1,19 @@
+{
+  "name": "grapp-token-test",
+  "version": "0.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/katemihalikova/grapp-token-test.git"
+  },
+  "author": "Kate Miháliková <kate@katemihalikova.cz>",
+  "license": "MIT",
+  "homepage": "https://github.com/katemihalikova/grapp-token-test#readme",
+  "dependencies": {
+    "cheerio": "^0.22.0",
+    "request": "^2.79.0"
+  }
+}

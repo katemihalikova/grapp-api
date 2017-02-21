@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "outDir": "./release",
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "declaration": true,
+    "sourceMap": true
+  }
+}

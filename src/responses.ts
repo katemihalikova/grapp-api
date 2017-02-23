@@ -1,77 +1,59 @@
-export type NetworkResponse = {
-  Stations: Station[],
-  Paths: Path[],
-  Boundary: Path[],
-} & CommonResponse;
+export interface NetworkResponse extends CommonResponse {
+  Stations: Station[];
+  Paths: Path[];
+  Boundary: Path[];
+}
 
+export interface TrainsResponse extends CommonResponse {
+  QuickMessage: string;
+  ReloadPage: boolean;
+  Trains: Train[];
+}
 
-export type TrainsResponse = {
-  QuickMessage: string,
-  ReloadPage: boolean,
-  Trains: Train[],
-} & CommonResponse;
+export interface TrainSummaryResponse extends CommonResponse {
+  Id: number;
+  Confirmed1: GPS[];
+  InPlan1: GPS[];
+  Confirmed2: any[];
+  InPlan2: any[];
+  Stations: Station[];
+}
 
-export type TrainSummaryResponse = {
-  Id: number,
-  Confirmed1: GPS[],
-  InPlan1: GPS[],
-  Confirmed2: any[],
-  InPlan2: any[],
-  Stations: Station[],
-} & CommonResponse;
+export interface TrainDetailResponse {
+  Id: number;
+  Title: string;
+  CarrierName: string;
+  FromStationName: string;
+  ToStationName: string;
+  LastKnownStationName: string;
+  ScheduledArrival: string | null;
+  ActualArrival: string | null;
+  ScheduledDeparture: string | null;
+  ActualDeparture: string | null;
+  Delay: number | null;
+}
 
-export type TrainDetailResponse = {
-  Id: number, // @TODO get it from request param, not from response
-  Title: string,
-  CarrierName: string,
-  FromStationName: string,
-  ToStationName: string,
-} & ( // @TODO make sure that gray local train is covered by this
-  {
-    ConfirmedStationName: string,
-    ScheduledArrival: string,
-    ConfirmedArrival: string,
-    Delay: number,
-  } | {
-    ConfirmedStationName: string,
-    ScheduledDeparture: string,
-    ConfirmedDeparture: string,
-    Delay: number,
-  } | {
-    LastKnownStationName: string,
-    Delay: number | null,
-  }
-);
+export interface TrainRouteResponse {
+  Id: number;
+  Title: string;
+  CarrierName: string;
+  Stations: RouteStation[];
+  FromStationName: string;
+  ToStationName: string;
+  LastKnownStation: RouteStation;
+}
 
-export type TrainRouteResponse = {
-  Id: number, // @TODO get it from request param, not from response
-  Title: string,
-  CarrierName: string,
-  Stations: RouteStation[],
-  FromStation: RouteStation,
-  ToStation: RouteStation,
-  LastKnownStation: RouteStation,
-};
+export interface StationInfoResponse {
+  Id: number;
+  Name: string;
+  TabuleId: number;
+  Arrivals: TrainArrival[] | null;
+  Departures: TrainDeparture[] | null;
+}
 
-export type StationInfoResponse = {
-  Id: number, // @TODO get it from request param, not from response
-  Name: string,
-  TabuleId: number | null, // @TODO check if it is possible to request stationinfo of stations that are not clickable in train route info (and thus have TabuleId). If not, TabuleId can't be null
-  Departures: TrainDeparture[],
-  Arrivals: TrainArrival[],
-};
+export type Callback<T> = (error: Error | null, data: T | null) => void;
 
-
-
-
-export type TrainDeparture = {
-  Title: string,
-  ScheduledDeparture: string,
-  ToStationName: string,
-  Platform: string | null,
-  Track: string | null,
-  Delay: number | null,
-};
+// Helper types
 
 export type TrainArrival = {
   Title: string,
@@ -82,10 +64,17 @@ export type TrainArrival = {
   Delay: number | null,
 };
 
-
-
+export type TrainDeparture = {
+  Title: string,
+  ScheduledDeparture: string,
+  ToStationName: string,
+  Platform: string | null,
+  Track: string | null,
+  Delay: number | null,
+};
 
 export type RouteStation = {
+  Id: number | null,
   Name: string,
   ScheduledArrival: string | null,
   ActualArrival: string | null,
@@ -93,12 +82,10 @@ export type RouteStation = {
   ActualDeparture: string | null,
 };
 
-
-
-export type CommonResponse = {
-  CopyrightNotice: string,
-  InvokeGUID: string,
-};
+export interface CommonResponse {
+  CopyrightNotice: string;
+  InvokeGUID: string;
+}
 
 export type Station = {
   Id: number,

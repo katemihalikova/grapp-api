@@ -1,56 +1,58 @@
-export declare type NetworkResponse = {
+export interface NetworkResponse extends CommonResponse {
     Stations: Station[];
     Paths: Path[];
     Boundary: Path[];
-} & CommonResponse;
-export declare type TrainsResponse = {
+}
+export interface TrainsResponse extends CommonResponse {
     QuickMessage: string;
     ReloadPage: boolean;
     Trains: Train[];
-} & CommonResponse;
-export declare type TrainSummaryResponse = {
+}
+export interface TrainSummaryResponse extends CommonResponse {
     Id: number;
     Confirmed1: GPS[];
     InPlan1: GPS[];
     Confirmed2: any[];
     InPlan2: any[];
     Stations: Station[];
-} & CommonResponse;
-export declare type TrainDetailResponse = {
+}
+export interface TrainDetailResponse {
     Id: number;
     Title: string;
     CarrierName: string;
     FromStationName: string;
     ToStationName: string;
-} & ({
-    ConfirmedStationName: string;
-    ScheduledArrival: string;
-    ConfirmedArrival: string;
-    Delay: number;
-} | {
-    ConfirmedStationName: string;
-    ScheduledDeparture: string;
-    ConfirmedDeparture: string;
-    Delay: number;
-} | {
     LastKnownStationName: string;
+    ScheduledArrival: string | null;
+    ActualArrival: string | null;
+    ScheduledDeparture: string | null;
+    ActualDeparture: string | null;
     Delay: number | null;
-});
-export declare type TrainRouteResponse = {
+}
+export interface TrainRouteResponse {
     Id: number;
     Title: string;
     CarrierName: string;
     Stations: RouteStation[];
-    FromStation: RouteStation;
-    ToStation: RouteStation;
+    FromStationName: string;
+    ToStationName: string;
     LastKnownStation: RouteStation;
-};
-export declare type StationInfoResponse = {
+}
+export interface StationInfoResponse {
     Id: number;
     Name: string;
-    TabuleId: number | null;
-    Departures: TrainDeparture[];
-    Arrivals: TrainArrival[];
+    TabuleId: number;
+    Arrivals: TrainArrival[] | null;
+    Departures: TrainDeparture[] | null;
+}
+export declare type Callback<T> = (error: Error | null, data: T | null) => void;
+export declare type TrainArrival = {
+    Title: string;
+    ScheduledArrival: string;
+    FromStationName: string;
+    Platform: string | null;
+    Track: string | null;
+    Delay: number | null;
 };
 export declare type TrainDeparture = {
     Title: string;
@@ -60,25 +62,18 @@ export declare type TrainDeparture = {
     Track: string | null;
     Delay: number | null;
 };
-export declare type TrainArrival = {
-    Title: string;
-    ScheduledArrival: string;
-    FromStationName: string;
-    Platform: string | null;
-    Track: string | null;
-    Delay: number | null;
-};
 export declare type RouteStation = {
+    Id: number | null;
     Name: string;
     ScheduledArrival: string | null;
     ActualArrival: string | null;
     ScheduledDeparture: string | null;
     ActualDeparture: string | null;
 };
-export declare type CommonResponse = {
+export interface CommonResponse {
     CopyrightNotice: string;
     InvokeGUID: string;
-};
+}
 export declare type Station = {
     Id: number;
     Name: string;

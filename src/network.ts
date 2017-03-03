@@ -1,23 +1,10 @@
-import * as request from "request";
+import Axios from "axios";
 
 import {baseUrl} from "./baseUrl";
-import {StatusCodeError} from "./errors";
 import {Token} from "./params";
-import {Callback, NetworkResponse} from "./responses";
+import {NetworkResponse} from "./responses";
 
-export function getNetwork(token: Token, cb: Callback<NetworkResponse>): void {
-  request({
-    url: `${baseUrl}get/network/all/${token}`,
-    json: true,
-  }, (error, response, json) => {
-    if (error) {
-      cb(error, null);
-      return;
-    }
-    if (response.statusCode >= 400) {
-      cb(new StatusCodeError(response), null);
-      return;
-    }
-    cb(null, json);
-  });
+export function getNetwork(token: Token): Promise<NetworkResponse> {
+  return Axios.get(`${baseUrl}get/network/all/${token}`)
+    .then(response => response.data);
 }

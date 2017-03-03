@@ -1,26 +1,19 @@
 "use strict";
+var axios_1 = require("axios");
 var cheerio = require("cheerio");
-var request = require("request");
 var baseUrl_1 = require("./baseUrl");
-var errors_1 = require("./errors");
-function getStationInfo(token, stationId, cb) {
-    request({
-        url: baseUrl_1.baseUrl + "OneTrain/StationInfo/" + token,
-        qs: { stationId: stationId }
-    }, function (error, response, html) {
-        if (error) {
-            cb(error, null);
-            return;
-        }
-        if (response.statusCode >= 400) {
-            cb(new errors_1.StatusCodeError(response), null);
-            return;
-        }
+function getStationInfo(token, stationId) {
+    return axios_1["default"].get(baseUrl_1.baseUrl + "OneTrain/StationInfo/" + token, {
+        params: { stationId: stationId },
+        responseType: "text"
+    })
+        .then(function (response) { return response.data; })
+        .then(function (html) {
         var $ = cheerio.load(html, { xmlMode: true });
         var $header = $(".station_header a");
         var $arrivals = $("#stationArrival .strow");
         var $departures = $("#stationDeparture .strow");
-        var responseData = {
+        var stationInfoData = {
             Id: stationId,
             Name: $header.text().trim(),
             TabuleId: +$header.attr("href").match(/id=(\d+)/)[1],
@@ -41,7 +34,7 @@ function getStationInfo(token, stationId, cb) {
                     Delay: $delay.length ? +$delay.text().replace(/zpožd[eě]ní/, "").trim() : null
                 });
             });
-            responseData.Arrivals = arrivals_1;
+            stationInfoData.Arrivals = arrivals_1;
         }
         if ($departures.children().length) {
             var departures_1 = [];
@@ -57,9 +50,9 @@ function getStationInfo(token, stationId, cb) {
                     Delay: $delay.length ? +$delay.text().replace(/zpožd[eě]ní/, "").trim() : null
                 });
             });
-            responseData.Departures = departures_1;
+            stationInfoData.Departures = departures_1;
         }
-        cb(null, responseData);
+        return stationInfoData;
     });
 }
 exports.getStationInfo = getStationInfo;

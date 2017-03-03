@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "./release",
+    "lib": ["dom", "es2015"],
     "strictNullChecks": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,

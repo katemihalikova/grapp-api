@@ -45,7 +45,6 @@ export interface StationInfoResponse {
     Arrivals: TrainArrival[] | null;
     Departures: TrainDeparture[] | null;
 }
-export declare type Callback<T> = (error: Error | null, data: T | null) => void;
 export declare type TrainArrival = {
     Title: string;
     ScheduledArrival: string;

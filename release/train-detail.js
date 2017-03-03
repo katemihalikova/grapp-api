@@ -1,21 +1,14 @@
 "use strict";
+var axios_1 = require("axios");
 var cheerio = require("cheerio");
-var request = require("request");
 var baseUrl_1 = require("./baseUrl");
-var errors_1 = require("./errors");
-function getTrainDetail(token, trainId, cb) {
-    request({
-        url: baseUrl_1.baseUrl + "OneTrain/MainInfo/" + token,
-        qs: { trainId: trainId }
-    }, function (error, response, html) {
-        if (error) {
-            cb(error, null);
-            return;
-        }
-        if (response.statusCode >= 400) {
-            cb(new errors_1.StatusCodeError(response), null);
-            return;
-        }
+function getTrainDetail(token, trainId) {
+    return axios_1["default"].get(baseUrl_1.baseUrl + "OneTrain/MainInfo/" + token, {
+        params: { trainId: trainId },
+        responseType: "text"
+    })
+        .then(function (response) { return response.data; })
+        .then(function (html) {
         var $ = cheerio.load(html, { xmlMode: true });
         var $scheduledArrival = $(".arrivalTT > span");
         var $actualArrival = $(".arrivalReal > span");
@@ -23,7 +16,7 @@ function getTrainDetail(token, trainId, cb) {
         var $actualDeparture = $(".departureReal > span");
         var $localDelay = $(".infoTrainDelay");
         var $foreignDelay = $(".details:has(label:first-child)");
-        var responseData = {
+        var trainDetailData = {
             Id: trainId,
             Title: $(".infoTrainTop > div > div:nth-child(1) strong").text().trim(),
             CarrierName: $(".infoTrainTop > div > div:nth-child(2)> strong").text().trim(),
@@ -37,19 +30,19 @@ function getTrainDetail(token, trainId, cb) {
             Delay: null
         };
         if ($scheduledArrival.length) {
-            responseData.ScheduledArrival = $scheduledArrival.text().replace(/[^\d:]/g, "");
+            trainDetailData.ScheduledArrival = $scheduledArrival.text().replace(/[^\d:]/g, "");
         }
         if ($actualArrival.length) {
-            responseData.ActualArrival = $actualArrival.text().replace(/[^\d:]/g, "");
+            trainDetailData.ActualArrival = $actualArrival.text().replace(/[^\d:]/g, "");
         }
         if ($scheduledDeparture.length) {
-            responseData.ScheduledDeparture = $scheduledDeparture.text().replace(/[^\d:]/g, "");
+            trainDetailData.ScheduledDeparture = $scheduledDeparture.text().replace(/[^\d:]/g, "");
         }
         if ($actualDeparture.length) {
-            responseData.ActualDeparture = $actualDeparture.text().replace(/[^\d:]/g, "");
+            trainDetailData.ActualDeparture = $actualDeparture.text().replace(/[^\d:]/g, "");
         }
         // @TODO Delay
-        cb(null, responseData);
+        return trainDetailData;
     });
 }
 exports.getTrainDetail = getTrainDetail;

@@ -7,6 +7,5 @@ export * from "./train-summary";
 export * from "./trains";
 
 export * from "./baseUrl";
-export * from "./errors";
 export * from "./params";
 export * from "./responses";

@@ -1,22 +1,13 @@
 "use strict";
+var axios_1 = require("axios");
 var cheerio = require("cheerio");
-var request = require("request");
 var baseUrl_1 = require("./baseUrl");
-var errors_1 = require("./errors");
-function loadToken(cb) {
-    request({
-        url: baseUrl_1.baseUrl
-    }, function (error, response, html) {
-        if (error) {
-            cb(error, null);
-            return;
-        }
-        if (response.statusCode >= 400) {
-            cb(new errors_1.StatusCodeError(response), null);
-            return;
-        }
+function loadToken() {
+    return axios_1["default"].get(baseUrl_1.baseUrl)
+        .then(function (response) { return response.data; })
+        .then(function (html) {
         var $ = cheerio.load(html);
-        cb(null, $("#token").val());
+        return $("#token").val();
     });
 }
 exports.loadToken = loadToken;

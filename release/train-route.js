@@ -1,24 +1,17 @@
 "use strict";
+var axios_1 = require("axios");
 var cheerio = require("cheerio");
-var request = require("request");
 var baseUrl_1 = require("./baseUrl");
-var errors_1 = require("./errors");
-function getTrainRoute(token, trainId, cb) {
-    request({
-        url: baseUrl_1.baseUrl + "OneTrain/RouteInfo/" + token,
-        qs: { trainId: trainId }
-    }, function (error, response, html) {
-        if (error) {
-            cb(error, null);
-            return;
-        }
-        if (response.statusCode >= 400) {
-            cb(new errors_1.StatusCodeError(response), null);
-            return;
-        }
+function getTrainRoute(token, trainId) {
+    return axios_1["default"].get(baseUrl_1.baseUrl + "OneTrain/RouteInfo/" + token, {
+        params: { trainId: trainId },
+        responseType: "text"
+    })
+        .then(function (response) { return response.data; })
+        .then(function (html) {
         var $ = cheerio.load(html, { xmlMode: true });
         var $stations = $(".route > .row").not(".rowRoute");
-        var responseData = {
+        var trainRouteData = {
             Id: trainId,
             Title: $(".routeInfo > div > div:nth-child(1) strong").text().trim(),
             CarrierName: $(".routeInfo > div > div:nth-child(2)> strong").text().trim(),
@@ -44,7 +37,7 @@ function getTrainRoute(token, trainId, cb) {
             };
             if (stationData.Name.indexOf("->") === 0) {
                 stationData.Name = stationData.Name.replace("->", "").trim();
-                responseData.LastKnownStation = stationData;
+                trainRouteData.LastKnownStation = stationData;
             }
             if ($arrival.children().length) {
                 stationData.ScheduledArrival = $(".timeTT", $arrival).text().replace(/[^\d:]/g, "");
@@ -58,9 +51,9 @@ function getTrainRoute(token, trainId, cb) {
                     stationData.ActualDeparture = $actualdeparture.text().replace(/[^\d:]/g, "");
                 }
             }
-            responseData.Stations.push(stationData);
+            trainRouteData.Stations.push(stationData);
         });
-        cb(null, responseData);
+        return trainRouteData;
     });
 }
 exports.getTrainRoute = getTrainRoute;

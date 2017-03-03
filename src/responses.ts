@@ -51,8 +51,6 @@ export interface StationInfoResponse {
   Departures: TrainDeparture[] | null;
 }
 
-export type Callback<T> = (error: Error | null, data: T | null) => void;
-
 // Helper types
 
 export type TrainArrival = {

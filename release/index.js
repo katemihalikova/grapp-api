@@ -9,7 +9,6 @@ __export(require("./train-detail"));
 __export(require("./train-route"));
 __export(require("./train-summary"));
 __export(require("./baseUrl"));
-__export(require("./errors"));
 __export(require("./params"));
 __export(require("./responses"));
 //# sourceMappingURL=index.js.map

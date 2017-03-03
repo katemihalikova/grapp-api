@@ -13,13 +13,12 @@
   "license": "MIT",
   "homepage": "https://github.com/katemihalikova/grapp-api#readme",
   "dependencies": {
-    "cheerio": "^0.22.0",
-    "request": "^2.79.0"
+    "axios": "^0.15.3",
+    "cheerio": "^0.22.0"
   },
   "devDependencies": {
     "@types/cheerio": "^0.17.31",
     "@types/node": "^7.0.5",
-    "@types/request": "^0.0.40",
     "rimraf": "^2.6.0",
     "tslint": "^4.4.2",
     "typescript": "^2.1.6"
